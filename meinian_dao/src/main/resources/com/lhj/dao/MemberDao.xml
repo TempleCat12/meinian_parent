@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lhj.dao.MemberDao">
+    <select id="getMemberByTelephone" parameterType="string" resultType="member">
+        select * from t_member where phoneNumber = #{telephone}
+    </select>
+
+    <insert id="add" parameterType="member">
+        <selectKey keyProperty="id" resultType="int" order="AFTER">
+            select last_insert_id()
+        </selectKey>
+        insert into t_member (fileNumber, name, sex, idCard, phoneNumber, regTime, password, email, birthday, remark)
+            values (#{fileNumber}, #{name}, #{sex}, #{idCard}, #{phoneNumber}, #{regTime}, #{password}, #{email}, #{birthday}, #{remark})
+    </insert>
+
+    <select id="getMinRegDate" resultType="java.util.Date">
+        select min(regTime) from t_member
+    </select>
+    <select id="getMaxRegDate" resultType="java.util.Date">
+        select max(regTime) from t_member
+    </select>
+
+    <select id="getMemberCountByMonth" parameterType="java.util.Date" resultType="long">
+        select count(id) from t_member where regTime &lt;= #{endDate}
+    </select>
+
+</mapper>

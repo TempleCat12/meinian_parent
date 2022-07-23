@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>会员增长表</title>
+    <script type="text/javascript" src="../js/echarts.js"></script>
+    <!-- 引入组件库 -->
+    <script src="../js/vue.js"></script>
+    <script src="../plugins/elementui/index.js"></script>
+    <script src="../js/axios-0.18.0.js"></script>
+    <script type="text/javascript" src="../js/jquery.min.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <div class="box">
+            <!-- 为 ECharts 准备一个具备大小（宽高）的 DOM -->
+            <div id="chart1" style="height:600px;"></div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript">
+    var memberChart = echarts.init(document.getElementById("chart1"))
+
+    axios.get("/report/getMemberReport.do").then((resp)=>{
+        if (resp.data.flag) {
+            var option = {
+                title:{
+                    text:'会员数量'
+                },
+                xAxis: {
+                    type: 'category',
+                    /*月份*/
+                    data: resp.data.data.months
+                },
+                yAxis: {
+                    type: 'value'
+                },
+                series: [
+                    {
+                        /*会员数量*/
+                        data: resp.data.data.memberCount,
+                        type: 'line'
+                    }
+                ]
+            };
+            memberChart.setOption(option)
+        }else {
+            this.$message.error(resp.data.message)
+        }
+    })
+</script>
+</html>
